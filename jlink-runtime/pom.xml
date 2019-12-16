@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.example</groupId>
+    <artifactId>jlink-test-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>jlink-test-runtime</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jlink</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>jlink-test-main</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jlink-plugin</artifactId>
+        <version>3.0.0-alpha-1</version>
+        <extensions>true</extensions>
+        <configuration>
+          <noHeaderFiles>true</noHeaderFiles>
+          <noManPages>true</noManPages>
+          <stripDebug>true</stripDebug>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>7.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <configuration>
+          <from><image>ubuntu:18.04</image></from>
+          <!--
+          <from><image>docker://bazel/java:java11_debian9</image></from>
+          -->
+          <to><image>jlink-jib-sample</image></to>
+          <container>
+            <entrypoint>
+              <arg>/bin/java</arg>
+              <arg>--module</arg>
+              <arg>com.example/com.example.JLinkSample</arg>
+            </entrypoint>
+          </container>
+          <extraDirectories>
+            <paths>target/maven-jlink</paths>
+            <permissions>
+              <permission>
+                <file>/bin/java</file>
+                <mode>755</mode>
+              </permission>
+            </permissions>
+          </extraDirectories>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
